@@ -50,11 +50,9 @@ const { currentUser } = storeToRefs(userStore)
         <el-avatar :icon="UserFilled" :src="currentUser?.avatar" :size="34" />
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="$router.push('/userInfo')">个人信息</el-dropdown-item>
+            <el-dropdown-item @click="$router.push('/userInfo')">个人中心</el-dropdown-item>
             <el-dropdown-item @click="$router.push('/changePassword')">修改密码</el-dropdown-item>
-            <el-dropdown-item divided @click="logout">
-              <span style="display: block">退出登录</span>
-            </el-dropdown-item>
+            <el-dropdown-item @click="logout"> 退出登录 </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
