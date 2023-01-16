@@ -58,10 +58,21 @@ export const constantRoutes: RouteRecordRaw[] = [
   },
   {
     path: "/userInfo",
-    component: () => import("@/views/user/about/index.vue"),
+    component: Layout,
+    redirect: "/current",
     meta: {
       hidden: true
-    }
+    },
+    children: [
+      {
+        path: "/current",
+        component: () => import("@/views/user/about/index.vue"),
+        name: "个人中心",
+        meta: {
+          title: "个人中心"
+        }
+      }
+    ]
   }
 ]
 
