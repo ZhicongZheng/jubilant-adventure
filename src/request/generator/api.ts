@@ -22,6 +22,221 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
+ * @interface ArticleCategory
+ */
+export interface ArticleCategory {
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleCategory
+     */
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleCategory
+     */
+    name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleCategory
+     */
+    parent: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleCategory
+     */
+    createAt: string;
+}
+/**
+ * 
+ * @export
+ * @interface ArticleCommand
+ */
+export interface ArticleCommand {
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleCommand
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleCommand
+     */
+    title: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleCommand
+     */
+    introduction: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleCommand
+     */
+    frontCover?: string;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof ArticleCommand
+     */
+    tags?: Array<number>;
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleCommand
+     */
+    category?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleCommand
+     */
+    contentMd: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleCommand
+     */
+    contentHtml: string;
+}
+/**
+ * 
+ * @export
+ * @interface ArticleDto
+ */
+export interface ArticleDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleDto
+     */
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleDto
+     */
+    title: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleDto
+     */
+    introduction: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleDto
+     */
+    frontCover?: string;
+    /**
+     * 
+     * @type {Array<ArticleTag>}
+     * @memberof ArticleDto
+     */
+    tags?: Array<ArticleTag>;
+    /**
+     * 
+     * @type {ArticleCategory}
+     * @memberof ArticleDto
+     */
+    category?: ArticleCategory;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleDto
+     */
+    contentMd: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleDto
+     */
+    contentHtml: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleDto
+     */
+    status: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleDto
+     */
+    viewCount: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleDto
+     */
+    likeCount: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleDto
+     */
+    createAt: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleDto
+     */
+    updateAt: string;
+}
+/**
+ * 
+ * @export
+ * @interface ArticleTag
+ */
+export interface ArticleTag {
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleTag
+     */
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleTag
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleTag
+     */
+    createAt: string;
+}
+/**
+ * 
+ * @export
+ * @interface ArticleTagCommand
+ */
+export interface ArticleTagCommand {
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleTagCommand
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleTagCommand
+     */
+    name: string;
+}
+/**
+ * 
+ * @export
  * @interface ChangePasswordCommand
  */
 export interface ChangePasswordCommand {
@@ -155,6 +370,55 @@ export interface LoginCommand {
      * @memberof LoginCommand
      */
     code: string;
+}
+/**
+ * 
+ * @export
+ * @interface PageArticleDto
+ */
+export interface PageArticleDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof PageArticleDto
+     */
+    page: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageArticleDto
+     */
+    size: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageArticleDto
+     */
+    totalCount: number;
+    /**
+     * 
+     * @type {Array<ArticleDto>}
+     * @memberof PageArticleDto
+     */
+    data?: Array<ArticleDto>;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageArticleDto
+     */
+    totalPages: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageArticleDto
+     */
+    hasPrevious: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageArticleDto
+     */
+    hasNext: boolean;
 }
 /**
  * 
@@ -525,6 +789,947 @@ export interface UserDto {
 }
 
 /**
+ * ArticleApi - axios parameter creator
+ * @export
+ */
+export const ArticleApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 创建文章
+         * @summary 创建文章
+         * @param {ArticleCommand} articleCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createArticle: async (articleCommand: ArticleCommand, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'articleCommand' is not null or undefined
+            if (articleCommand === null || articleCommand === undefined) {
+                throw new RequiredError('articleCommand','Required parameter articleCommand was null or undefined when calling createArticle.');
+            }
+            const localVarPath = `/articles`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication apiKeyAuth required
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof articleCommand !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(articleCommand !== undefined ? articleCommand : {})
+                : (articleCommand || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 删除文章
+         * @summary 删除文章
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteArticle: async (id: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteArticle.');
+            }
+            const localVarPath = `/articles/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication apiKeyAuth required
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 分页获取文章列表
+         * @summary 分页获取文章
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {string} [sort] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listArticleByPage: async (page?: number, size?: number, sort?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/articles`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+            if (sort !== undefined) {
+                localVarQueryParameter['sort'] = sort;
+            }
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 更新文章
+         * @summary 更新文章
+         * @param {ArticleCommand} articleCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateArticle: async (articleCommand: ArticleCommand, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'articleCommand' is not null or undefined
+            if (articleCommand === null || articleCommand === undefined) {
+                throw new RequiredError('articleCommand','Required parameter articleCommand was null or undefined when calling updateArticle.');
+            }
+            const localVarPath = `/articles`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication apiKeyAuth required
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof articleCommand !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(articleCommand !== undefined ? articleCommand : {})
+                : (articleCommand || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ArticleApi - functional programming interface
+ * @export
+ */
+export const ArticleApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 创建文章
+         * @summary 创建文章
+         * @param {ArticleCommand} articleCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createArticle(articleCommand: ArticleCommand, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>> {
+            const localVarAxiosArgs = await ArticleApiAxiosParamCreator(configuration).createArticle(articleCommand, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 删除文章
+         * @summary 删除文章
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteArticle(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await ArticleApiAxiosParamCreator(configuration).deleteArticle(id, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 分页获取文章列表
+         * @summary 分页获取文章
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {string} [sort] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listArticleByPage(page?: number, size?: number, sort?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageArticleDto>> {
+            const localVarAxiosArgs = await ArticleApiAxiosParamCreator(configuration).listArticleByPage(page, size, sort, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 更新文章
+         * @summary 更新文章
+         * @param {ArticleCommand} articleCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateArticle(articleCommand: ArticleCommand, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await ArticleApiAxiosParamCreator(configuration).updateArticle(articleCommand, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+    }
+};
+
+/**
+ * ArticleApi - factory interface
+ * @export
+ */
+export const ArticleApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    return {
+        /**
+         * 创建文章
+         * @summary 创建文章
+         * @param {ArticleCommand} articleCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createArticle(articleCommand: ArticleCommand, options?: any): AxiosPromise<number> {
+            return ArticleApiFp(configuration).createArticle(articleCommand, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 删除文章
+         * @summary 删除文章
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteArticle(id: number, options?: any): AxiosPromise<void> {
+            return ArticleApiFp(configuration).deleteArticle(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 分页获取文章列表
+         * @summary 分页获取文章
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {string} [sort] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listArticleByPage(page?: number, size?: number, sort?: string, options?: any): AxiosPromise<PageArticleDto> {
+            return ArticleApiFp(configuration).listArticleByPage(page, size, sort, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 更新文章
+         * @summary 更新文章
+         * @param {ArticleCommand} articleCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateArticle(articleCommand: ArticleCommand, options?: any): AxiosPromise<void> {
+            return ArticleApiFp(configuration).updateArticle(articleCommand, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ArticleApi - object-oriented interface
+ * @export
+ * @class ArticleApi
+ * @extends {BaseAPI}
+ */
+export class ArticleApi extends BaseAPI {
+    /**
+     * 创建文章
+     * @summary 创建文章
+     * @param {ArticleCommand} articleCommand 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleApi
+     */
+    public createArticle(articleCommand: ArticleCommand, options?: any) {
+        return ArticleApiFp(this.configuration).createArticle(articleCommand, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 删除文章
+     * @summary 删除文章
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleApi
+     */
+    public deleteArticle(id: number, options?: any) {
+        return ArticleApiFp(this.configuration).deleteArticle(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 分页获取文章列表
+     * @summary 分页获取文章
+     * @param {number} [page] 
+     * @param {number} [size] 
+     * @param {string} [sort] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleApi
+     */
+    public listArticleByPage(page?: number, size?: number, sort?: string, options?: any) {
+        return ArticleApiFp(this.configuration).listArticleByPage(page, size, sort, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 更新文章
+     * @summary 更新文章
+     * @param {ArticleCommand} articleCommand 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleApi
+     */
+    public updateArticle(articleCommand: ArticleCommand, options?: any) {
+        return ArticleApiFp(this.configuration).updateArticle(articleCommand, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * ArticleCategoriesApi - axios parameter creator
+ * @export
+ */
+export const ArticleCategoriesApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 增加文章分类
+         * @summary 增加文章分类
+         * @param {ArticleTagCommand} articleTagCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addCategory: async (articleTagCommand: ArticleTagCommand, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'articleTagCommand' is not null or undefined
+            if (articleTagCommand === null || articleTagCommand === undefined) {
+                throw new RequiredError('articleTagCommand','Required parameter articleTagCommand was null or undefined when calling addCategory.');
+            }
+            const localVarPath = `/categories`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication apiKeyAuth required
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof articleTagCommand !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(articleTagCommand !== undefined ? articleTagCommand : {})
+                : (articleTagCommand || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 删除文章分类
+         * @summary 删除文章分类
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCategory: async (id: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteCategory.');
+            }
+            const localVarPath = `/categories/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication apiKeyAuth required
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 获取分类列表
+         * @summary 获取文章分类列表
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listCategories: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/categories`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ArticleCategoriesApi - functional programming interface
+ * @export
+ */
+export const ArticleCategoriesApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 增加文章分类
+         * @summary 增加文章分类
+         * @param {ArticleTagCommand} articleTagCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addCategory(articleTagCommand: ArticleTagCommand, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await ArticleCategoriesApiAxiosParamCreator(configuration).addCategory(articleTagCommand, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 删除文章分类
+         * @summary 删除文章分类
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteCategory(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await ArticleCategoriesApiAxiosParamCreator(configuration).deleteCategory(id, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 获取分类列表
+         * @summary 获取文章分类列表
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listCategories(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArticleTag>>> {
+            const localVarAxiosArgs = await ArticleCategoriesApiAxiosParamCreator(configuration).listCategories(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+    }
+};
+
+/**
+ * ArticleCategoriesApi - factory interface
+ * @export
+ */
+export const ArticleCategoriesApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    return {
+        /**
+         * 增加文章分类
+         * @summary 增加文章分类
+         * @param {ArticleTagCommand} articleTagCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addCategory(articleTagCommand: ArticleTagCommand, options?: any): AxiosPromise<void> {
+            return ArticleCategoriesApiFp(configuration).addCategory(articleTagCommand, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 删除文章分类
+         * @summary 删除文章分类
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCategory(id: number, options?: any): AxiosPromise<void> {
+            return ArticleCategoriesApiFp(configuration).deleteCategory(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 获取分类列表
+         * @summary 获取文章分类列表
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listCategories(options?: any): AxiosPromise<Array<ArticleTag>> {
+            return ArticleCategoriesApiFp(configuration).listCategories(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ArticleCategoriesApi - object-oriented interface
+ * @export
+ * @class ArticleCategoriesApi
+ * @extends {BaseAPI}
+ */
+export class ArticleCategoriesApi extends BaseAPI {
+    /**
+     * 增加文章分类
+     * @summary 增加文章分类
+     * @param {ArticleTagCommand} articleTagCommand 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleCategoriesApi
+     */
+    public addCategory(articleTagCommand: ArticleTagCommand, options?: any) {
+        return ArticleCategoriesApiFp(this.configuration).addCategory(articleTagCommand, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 删除文章分类
+     * @summary 删除文章分类
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleCategoriesApi
+     */
+    public deleteCategory(id: number, options?: any) {
+        return ArticleCategoriesApiFp(this.configuration).deleteCategory(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 获取分类列表
+     * @summary 获取文章分类列表
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleCategoriesApi
+     */
+    public listCategories(options?: any) {
+        return ArticleCategoriesApiFp(this.configuration).listCategories(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * ArticleTagsApi - axios parameter creator
+ * @export
+ */
+export const ArticleTagsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 增加文章标签
+         * @summary 增加文章标签
+         * @param {ArticleTagCommand} articleTagCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addTags: async (articleTagCommand: ArticleTagCommand, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'articleTagCommand' is not null or undefined
+            if (articleTagCommand === null || articleTagCommand === undefined) {
+                throw new RequiredError('articleTagCommand','Required parameter articleTagCommand was null or undefined when calling addTags.');
+            }
+            const localVarPath = `/tags`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication apiKeyAuth required
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof articleTagCommand !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(articleTagCommand !== undefined ? articleTagCommand : {})
+                : (articleTagCommand || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 删除文章标签
+         * @summary 删除文章标签
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteTags: async (id: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteTags.');
+            }
+            const localVarPath = `/tags/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication apiKeyAuth required
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 获取文章标签列表
+         * @summary 获取文章标签列表
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTags: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/tags`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ArticleTagsApi - functional programming interface
+ * @export
+ */
+export const ArticleTagsApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 增加文章标签
+         * @summary 增加文章标签
+         * @param {ArticleTagCommand} articleTagCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addTags(articleTagCommand: ArticleTagCommand, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await ArticleTagsApiAxiosParamCreator(configuration).addTags(articleTagCommand, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 删除文章标签
+         * @summary 删除文章标签
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteTags(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await ArticleTagsApiAxiosParamCreator(configuration).deleteTags(id, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 获取文章标签列表
+         * @summary 获取文章标签列表
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listTags(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArticleTag>>> {
+            const localVarAxiosArgs = await ArticleTagsApiAxiosParamCreator(configuration).listTags(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+    }
+};
+
+/**
+ * ArticleTagsApi - factory interface
+ * @export
+ */
+export const ArticleTagsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    return {
+        /**
+         * 增加文章标签
+         * @summary 增加文章标签
+         * @param {ArticleTagCommand} articleTagCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addTags(articleTagCommand: ArticleTagCommand, options?: any): AxiosPromise<void> {
+            return ArticleTagsApiFp(configuration).addTags(articleTagCommand, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 删除文章标签
+         * @summary 删除文章标签
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteTags(id: number, options?: any): AxiosPromise<void> {
+            return ArticleTagsApiFp(configuration).deleteTags(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 获取文章标签列表
+         * @summary 获取文章标签列表
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTags(options?: any): AxiosPromise<Array<ArticleTag>> {
+            return ArticleTagsApiFp(configuration).listTags(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ArticleTagsApi - object-oriented interface
+ * @export
+ * @class ArticleTagsApi
+ * @extends {BaseAPI}
+ */
+export class ArticleTagsApi extends BaseAPI {
+    /**
+     * 增加文章标签
+     * @summary 增加文章标签
+     * @param {ArticleTagCommand} articleTagCommand 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleTagsApi
+     */
+    public addTags(articleTagCommand: ArticleTagCommand, options?: any) {
+        return ArticleTagsApiFp(this.configuration).addTags(articleTagCommand, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 删除文章标签
+     * @summary 删除文章标签
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleTagsApi
+     */
+    public deleteTags(id: number, options?: any) {
+        return ArticleTagsApiFp(this.configuration).deleteTags(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 获取文章标签列表
+     * @summary 获取文章标签列表
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleTagsApi
+     */
+    public listTags(options?: any) {
+        return ArticleTagsApiFp(this.configuration).listTags(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
  * FilesApi - axios parameter creator
  * @export
  */
@@ -555,14 +1760,7 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarQueryParameter = {} as any;
             const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
 
             if (file !== undefined) { 
@@ -685,14 +1883,7 @@ export const RolesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
 
     
@@ -746,14 +1937,7 @@ export const RolesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
 
     
@@ -792,14 +1976,7 @@ export const RolesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
 
     
@@ -841,14 +2018,7 @@ export const RolesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -904,14 +2074,7 @@ export const RolesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
 
     
@@ -1183,14 +2346,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
 
     
@@ -1250,14 +2406,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
 
     
@@ -1301,14 +2450,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
 
     
@@ -1356,14 +2498,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
 
     
@@ -1408,14 +2543,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
 
     
@@ -1457,14 +2585,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -1603,14 +2724,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
 
     
@@ -1654,14 +2768,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication httpAuth required
-            // http bearer authentication required
-            if (configuration && configuration.accessToken) {
-                const accessToken = typeof configuration.accessToken === 'function'
-                    ? await configuration.accessToken()
-                    : await configuration.accessToken;
-                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
-            }
+            // authentication apiKeyAuth required
 
 
     
