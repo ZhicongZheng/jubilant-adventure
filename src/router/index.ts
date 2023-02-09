@@ -83,7 +83,7 @@ export const constantRoutes: RouteRecordRaw[] = [
  */
 export const asyncRoutes: RouteRecordRaw[] = [
   {
-    path: "/user-manager",
+    path: "/users",
     component: Layout,
     redirect: "/users",
     meta: {
@@ -103,7 +103,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: "/role-manager",
+    path: "/roles",
     component: Layout,
     redirect: "/roles",
     meta: {
@@ -116,6 +116,26 @@ export const asyncRoutes: RouteRecordRaw[] = [
         name: "Role List",
         meta: {
           title: "角色管理",
+          svgIcon: "lock",
+          roles: ["SUPER_ADMIN"]
+        }
+      }
+    ]
+  },
+  {
+    path: "/articles",
+    component: Layout,
+    redirect: "/articles",
+    meta: {
+      alwaysShow: false
+    },
+    children: [
+      {
+        path: "/articles",
+        component: () => import("@/views/article/index.vue"),
+        name: "Article List",
+        meta: {
+          title: "文章管理",
           svgIcon: "lock",
           roles: ["SUPER_ADMIN"]
         }

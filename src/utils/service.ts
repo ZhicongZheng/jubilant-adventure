@@ -2,7 +2,15 @@ import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios"
 import router from "@/router"
 import { ElMessage } from "element-plus"
 import { get } from "lodash-es"
-import { Configuration, UsersApi, FilesApi, RolesApi } from "@/request/generator"
+import {
+  Configuration,
+  UsersApi,
+  FilesApi,
+  RolesApi,
+  ArticleApi,
+  ArticleTagsApi,
+  ArticleCategoriesApi
+} from "@/request/generator"
 
 /** 创建请求实例 */
 function createService() {
@@ -90,5 +98,8 @@ export const request = createRequestFunction(service)
 export const api = {
   UserAPi: new UsersApi(new Configuration({}), "", service),
   RoleApi: new RolesApi(new Configuration({}), "", service),
-  FileApi: new FilesApi(new Configuration({}), "", service)
+  FileApi: new FilesApi(new Configuration({}), "", service),
+  ArticleApi: new ArticleApi(new Configuration({}), "", service),
+  ArticleTagApi: new ArticleTagsApi(new Configuration({}), "", service),
+  ArticleCategoryApi: new ArticleCategoriesApi(new Configuration({}), "", service)
 }
