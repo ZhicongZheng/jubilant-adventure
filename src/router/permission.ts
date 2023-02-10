@@ -8,7 +8,12 @@ import { whiteList } from "@/config/white-list"
 
 import "nprogress/nprogress.css"
 
-NProgress.configure({ showSpinner: false })
+NProgress.configure({
+  speed: 100,
+  showSpinner: false,
+  trickleSpeed: 500,
+  minimum: 0.3
+})
 
 router.beforeEach(async (to, _from, next) => {
   NProgress.start()

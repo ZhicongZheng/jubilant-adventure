@@ -53,6 +53,43 @@ export interface ArticleCategory {
 /**
  * 
  * @export
+ * @interface ArticleCategoryDto
+ */
+export interface ArticleCategoryDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleCategoryDto
+     */
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleCategoryDto
+     */
+    name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleCategoryDto
+     */
+    parent: number;
+    /**
+     * 
+     * @type {Array<ArticleCategoryDto>}
+     * @memberof ArticleCategoryDto
+     */
+    children?: Array<ArticleCategoryDto>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleCategoryDto
+     */
+    createAt: string;
+}
+/**
+ * 
+ * @export
  * @interface ArticleCommand
  */
 export interface ArticleCommand {
@@ -897,11 +934,13 @@ export const ArticleApiAxiosParamCreator = function (configuration?: Configurati
          * @summary 分页获取文章
          * @param {number} [page] 
          * @param {number} [size] 
-         * @param {string} [sort] 
+         * @param {number} [tag] 
+         * @param {number} [category] 
+         * @param {string} [searchTitle] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listArticleByPage: async (page?: number, size?: number, sort?: string, options: any = {}): Promise<RequestArgs> => {
+        listArticleByPage: async (page?: number, size?: number, tag?: number, category?: number, searchTitle?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/articles`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -922,9 +961,62 @@ export const ArticleApiAxiosParamCreator = function (configuration?: Configurati
                 localVarQueryParameter['size'] = size;
             }
 
-            if (sort !== undefined) {
-                localVarQueryParameter['sort'] = sort;
+            if (tag !== undefined) {
+                localVarQueryParameter['tag'] = tag;
             }
+
+            if (category !== undefined) {
+                localVarQueryParameter['category'] = category;
+            }
+
+            if (searchTitle !== undefined) {
+                localVarQueryParameter['searchTitle'] = searchTitle;
+            }
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 发布文章
+         * @summary 发布文章
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        releaseArticle: async (id: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling releaseArticle.');
+            }
+            const localVarPath = `/articles/release/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication apiKeyAuth required
 
 
     
@@ -1039,12 +1131,28 @@ export const ArticleApiFp = function(configuration?: Configuration) {
          * @summary 分页获取文章
          * @param {number} [page] 
          * @param {number} [size] 
-         * @param {string} [sort] 
+         * @param {number} [tag] 
+         * @param {number} [category] 
+         * @param {string} [searchTitle] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listArticleByPage(page?: number, size?: number, sort?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageArticleDto>> {
-            const localVarAxiosArgs = await ArticleApiAxiosParamCreator(configuration).listArticleByPage(page, size, sort, options);
+        async listArticleByPage(page?: number, size?: number, tag?: number, category?: number, searchTitle?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageArticleDto>> {
+            const localVarAxiosArgs = await ArticleApiAxiosParamCreator(configuration).listArticleByPage(page, size, tag, category, searchTitle, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 发布文章
+         * @summary 发布文章
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async releaseArticle(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await ArticleApiAxiosParamCreator(configuration).releaseArticle(id, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1098,12 +1206,24 @@ export const ArticleApiFactory = function (configuration?: Configuration, basePa
          * @summary 分页获取文章
          * @param {number} [page] 
          * @param {number} [size] 
-         * @param {string} [sort] 
+         * @param {number} [tag] 
+         * @param {number} [category] 
+         * @param {string} [searchTitle] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listArticleByPage(page?: number, size?: number, sort?: string, options?: any): AxiosPromise<PageArticleDto> {
-            return ArticleApiFp(configuration).listArticleByPage(page, size, sort, options).then((request) => request(axios, basePath));
+        listArticleByPage(page?: number, size?: number, tag?: number, category?: number, searchTitle?: string, options?: any): AxiosPromise<PageArticleDto> {
+            return ArticleApiFp(configuration).listArticleByPage(page, size, tag, category, searchTitle, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 发布文章
+         * @summary 发布文章
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        releaseArticle(id: number, options?: any): AxiosPromise<void> {
+            return ArticleApiFp(configuration).releaseArticle(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 更新文章
@@ -1154,13 +1274,27 @@ export class ArticleApi extends BaseAPI {
      * @summary 分页获取文章
      * @param {number} [page] 
      * @param {number} [size] 
-     * @param {string} [sort] 
+     * @param {number} [tag] 
+     * @param {number} [category] 
+     * @param {string} [searchTitle] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArticleApi
      */
-    public listArticleByPage(page?: number, size?: number, sort?: string, options?: any) {
-        return ArticleApiFp(this.configuration).listArticleByPage(page, size, sort, options).then((request) => request(this.axios, this.basePath));
+    public listArticleByPage(page?: number, size?: number, tag?: number, category?: number, searchTitle?: string, options?: any) {
+        return ArticleApiFp(this.configuration).listArticleByPage(page, size, tag, category, searchTitle, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 发布文章
+     * @summary 发布文章
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleApi
+     */
+    public releaseArticle(id: number, options?: any) {
+        return ArticleApiFp(this.configuration).releaseArticle(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1361,7 +1495,7 @@ export const ArticleCategoriesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listCategories(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArticleTag>>> {
+        async listCategories(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArticleCategoryDto>>> {
             const localVarAxiosArgs = await ArticleCategoriesApiAxiosParamCreator(configuration).listCategories(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
@@ -1403,7 +1537,7 @@ export const ArticleCategoriesApiFactory = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCategories(options?: any): AxiosPromise<Array<ArticleTag>> {
+        listCategories(options?: any): AxiosPromise<Array<ArticleCategoryDto>> {
             return ArticleCategoriesApiFp(configuration).listCategories(options).then((request) => request(axios, basePath));
         },
     };
@@ -2001,11 +2135,10 @@ export const RolesApiAxiosParamCreator = function (configuration?: Configuration
          * @summary 分页获取角色
          * @param {number} [page] 
          * @param {number} [size] 
-         * @param {string} [sort] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRoleByPage: async (page?: number, size?: number, sort?: string, options: any = {}): Promise<RequestArgs> => {
+        listRoleByPage: async (page?: number, size?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/roles`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -2026,10 +2159,6 @@ export const RolesApiAxiosParamCreator = function (configuration?: Configuration
 
             if (size !== undefined) {
                 localVarQueryParameter['size'] = size;
-            }
-
-            if (sort !== undefined) {
-                localVarQueryParameter['sort'] = sort;
             }
 
 
@@ -2158,12 +2287,11 @@ export const RolesApiFp = function(configuration?: Configuration) {
          * @summary 分页获取角色
          * @param {number} [page] 
          * @param {number} [size] 
-         * @param {string} [sort] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRoleByPage(page?: number, size?: number, sort?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageRoleDto>> {
-            const localVarAxiosArgs = await RolesApiAxiosParamCreator(configuration).listRoleByPage(page, size, sort, options);
+        async listRoleByPage(page?: number, size?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageRoleDto>> {
+            const localVarAxiosArgs = await RolesApiAxiosParamCreator(configuration).listRoleByPage(page, size, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -2226,12 +2354,11 @@ export const RolesApiFactory = function (configuration?: Configuration, basePath
          * @summary 分页获取角色
          * @param {number} [page] 
          * @param {number} [size] 
-         * @param {string} [sort] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRoleByPage(page?: number, size?: number, sort?: string, options?: any): AxiosPromise<PageRoleDto> {
-            return RolesApiFp(configuration).listRoleByPage(page, size, sort, options).then((request) => request(axios, basePath));
+        listRoleByPage(page?: number, size?: number, options?: any): AxiosPromise<PageRoleDto> {
+            return RolesApiFp(configuration).listRoleByPage(page, size, options).then((request) => request(axios, basePath));
         },
         /**
          * 更新角色信息，可以同时保存角色所分配的权限
@@ -2293,13 +2420,12 @@ export class RolesApi extends BaseAPI {
      * @summary 分页获取角色
      * @param {number} [page] 
      * @param {number} [size] 
-     * @param {string} [sort] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RolesApi
      */
-    public listRoleByPage(page?: number, size?: number, sort?: string, options?: any) {
-        return RolesApiFp(this.configuration).listRoleByPage(page, size, sort, options).then((request) => request(this.axios, this.basePath));
+    public listRoleByPage(page?: number, size?: number, options?: any) {
+        return RolesApiFp(this.configuration).listRoleByPage(page, size, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2568,11 +2694,10 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
          * @summary 分页获取用户
          * @param {number} [page] 
          * @param {number} [size] 
-         * @param {string} [sort] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUserByPage: async (page?: number, size?: number, sort?: string, options: any = {}): Promise<RequestArgs> => {
+        listUserByPage: async (page?: number, size?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/users`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -2593,10 +2718,6 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
 
             if (size !== undefined) {
                 localVarQueryParameter['size'] = size;
-            }
-
-            if (sort !== undefined) {
-                localVarQueryParameter['sort'] = sort;
             }
 
 
@@ -2881,12 +3002,11 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @summary 分页获取用户
          * @param {number} [page] 
          * @param {number} [size] 
-         * @param {string} [sort] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listUserByPage(page?: number, size?: number, sort?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageUserDto>> {
-            const localVarAxiosArgs = await UsersApiAxiosParamCreator(configuration).listUserByPage(page, size, sort, options);
+        async listUserByPage(page?: number, size?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageUserDto>> {
+            const localVarAxiosArgs = await UsersApiAxiosParamCreator(configuration).listUserByPage(page, size, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -3010,12 +3130,11 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          * @summary 分页获取用户
          * @param {number} [page] 
          * @param {number} [size] 
-         * @param {string} [sort] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUserByPage(page?: number, size?: number, sort?: string, options?: any): AxiosPromise<PageUserDto> {
-            return UsersApiFp(configuration).listUserByPage(page, size, sort, options).then((request) => request(axios, basePath));
+        listUserByPage(page?: number, size?: number, options?: any): AxiosPromise<PageUserDto> {
+            return UsersApiFp(configuration).listUserByPage(page, size, options).then((request) => request(axios, basePath));
         },
         /**
          * 输入用户名和密码，登陆管理后台
@@ -3130,13 +3249,12 @@ export class UsersApi extends BaseAPI {
      * @summary 分页获取用户
      * @param {number} [page] 
      * @param {number} [size] 
-     * @param {string} [sort] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public listUserByPage(page?: number, size?: number, sort?: string, options?: any) {
-        return UsersApiFp(this.configuration).listUserByPage(page, size, sort, options).then((request) => request(this.axios, this.basePath));
+    public listUserByPage(page?: number, size?: number, options?: any) {
+        return UsersApiFp(this.configuration).listUserByPage(page, size, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

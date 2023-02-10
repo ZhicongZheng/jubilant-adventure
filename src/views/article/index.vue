@@ -12,9 +12,19 @@ const { paginationData, handleCurrentChange, handleSizeChange } = usePagination(
 const tagsData = ref<Array<ArticleTag>>()
 const categoryData = ref<Array<ArticleCategory>>()
 const tableData = ref<Array<ArticleDto>>()
+
+const searchTag = ref<number>()
+const searchCategory = ref<number>()
+const searchTitle = ref<string>()
 const fetchTableData = () => {
   loading.value = true
-  api.ArticleApi.listArticleByPage(paginationData.page, paginationData.size)
+  api.ArticleApi.listArticleByPage(
+    paginationData.page,
+    paginationData.size,
+    searchTag.value,
+    searchCategory.value,
+    searchTitle.value
+  )
     .then((res) => {
       tableData.value = res.data.data
       paginationData.totalCount = res.data.totalCount
@@ -38,6 +48,11 @@ const handleClose = (tag: ArticleTag) => {
     ElMessage.success("删除标签成功")
     fetchTagsData()
   })
+}
+
+const handleClickTag = (tag: ArticleTag) => {
+  searchTag.value = tag.id
+  fetchTableData()
 }
 
 const showInput = () => {
@@ -84,7 +99,14 @@ watch([() => paginationData.page, () => paginationData.size], fetchTableData, { 
   <div class="app-container">
     <el-card>
       <div class="tag-wrapper">
-        <el-tag v-for="tag in tagsData" :key="tag.id" closable :disable-transitions="false" @close="handleClose(tag)">
+        <el-tag
+          v-for="tag in tagsData"
+          :key="tag.id"
+          closable
+          :disable-transitions="false"
+          @click="handleClickTag(tag)"
+          @close="handleClose(tag)"
+        >
           {{ tag.name }}
         </el-tag>
         <el-input
@@ -152,6 +174,7 @@ watch([() => paginationData.page, () => paginationData.size], fetchTableData, { 
 
 .el-tag {
   margin-right: 10px;
+  margin-bottom: 20px;
 }
 
 .el-input {
