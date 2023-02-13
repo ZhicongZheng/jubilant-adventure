@@ -76,6 +76,12 @@ export interface ArticleCategoryDto {
     parent: number;
     /**
      * 
+     * @type {number}
+     * @memberof ArticleCategoryDto
+     */
+    articleCount: number;
+    /**
+     * 
      * @type {Array<ArticleCategoryDto>}
      * @memberof ArticleCategoryDto
      */
@@ -270,6 +276,37 @@ export interface ArticleTagCommand {
      * @memberof ArticleTagCommand
      */
     name: string;
+}
+/**
+ * 
+ * @export
+ * @interface ArticleTagDto
+ */
+export interface ArticleTagDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleTagDto
+     */
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleTagDto
+     */
+    name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleTagDto
+     */
+    articleCount: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleTagDto
+     */
+    createAt: string;
 }
 /**
  * 
@@ -1771,7 +1808,7 @@ export const ArticleTagsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listTags(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArticleTag>>> {
+        async listTags(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArticleTagDto>>> {
             const localVarAxiosArgs = await ArticleTagsApiAxiosParamCreator(configuration).listTags(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
@@ -1813,7 +1850,7 @@ export const ArticleTagsApiFactory = function (configuration?: Configuration, ba
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listTags(options?: any): AxiosPromise<Array<ArticleTag>> {
+        listTags(options?: any): AxiosPromise<Array<ArticleTagDto>> {
             return ArticleTagsApiFp(configuration).listTags(options).then((request) => request(axios, basePath));
         },
     };

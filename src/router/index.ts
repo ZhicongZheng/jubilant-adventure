@@ -127,6 +127,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     component: Layout,
     redirect: "/articles",
     meta: {
+      title: "文章相关",
       alwaysShow: false
     },
     children: [
@@ -136,6 +137,16 @@ export const asyncRoutes: RouteRecordRaw[] = [
         name: "Article List",
         meta: {
           title: "文章管理",
+          svgIcon: "lock",
+          roles: ["SUPER_ADMIN"]
+        }
+      },
+      {
+        path: "/tags",
+        component: () => import("@/views/tag/index.vue"),
+        name: "Article Tag List",
+        meta: {
+          title: "标签管理",
           svgIcon: "lock",
           roles: ["SUPER_ADMIN"]
         }
