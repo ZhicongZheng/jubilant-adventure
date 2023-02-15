@@ -1,13 +1,11 @@
 <script lang="ts" setup>
-import { reactive, ref, watch } from "vue"
+import { onMounted, reactive, ref } from "vue"
 import { RefreshRight, CirclePlus } from "@element-plus/icons-vue"
 import { api } from "@/utils/service"
-import { usePagination } from "@/hooks/usePagination"
 import { ElMessage, ElMessageBox, ElInput, FormRules, FormInstance } from "element-plus"
 import { ArticleTagDto } from "@/request/generator"
 
 const loading = ref<boolean>(false)
-const { paginationData, handleCurrentChange, handleSizeChange } = usePagination()
 
 const tableData = ref<Array<ArticleTagDto>>()
 const dialogRef = ref<boolean>(false)
@@ -61,8 +59,10 @@ const resetAddForm = () => {
   formData.name = ""
   fetchTableData()
 }
-/** 监听分页参数变化*/
-watch([() => paginationData.page, () => paginationData.size], fetchTableData, { immediate: true })
+
+onMounted(() => {
+  fetchTableData()
+})
 </script>
 
 <template>
@@ -91,18 +91,6 @@ watch([() => paginationData.page, () => paginationData.size], fetchTableData, { 
             </template>
           </el-table-column>
         </el-table>
-      </div>
-      <div class="pager-wrapper">
-        <el-pagination
-          background
-          :layout="paginationData.layout"
-          :page-sizes="paginationData.pageSizes"
-          :total="paginationData.totalCount"
-          :page-size="paginationData.size"
-          :currentPage="paginationData.page"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
       </div>
     </el-card>
     <!--新增标签-->
@@ -136,10 +124,6 @@ watch([() => paginationData.page, () => paginationData.size], fetchTableData, { 
 .el-tag {
   margin-right: 10px;
   margin-bottom: 20px;
-}
-
-.el-input {
-  width: 15%;
 }
 
 .el-select {

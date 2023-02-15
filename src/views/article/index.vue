@@ -1,16 +1,15 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref, watch } from "vue"
-import { RefreshRight, Plus } from "@element-plus/icons-vue"
+import { onMounted, ref, watch } from "vue"
+import { RefreshRight } from "@element-plus/icons-vue"
 import { api } from "@/utils/service"
 import { usePagination } from "@/hooks/usePagination"
-import { ElMessage, ElMessageBox, ElInput } from "element-plus"
-import { ArticleCategory, ArticleDto, ArticleTag } from "@/request/generator"
+import { ElMessage, ElMessageBox } from "element-plus"
+import { ArticleDto, ArticleTag } from "@/request/generator"
 
 const loading = ref<boolean>(false)
 const { paginationData, handleCurrentChange, handleSizeChange } = usePagination()
 
 const tagsData = ref<Array<ArticleTag>>()
-const categoryData = ref<Array<ArticleCategory>>()
 const tableData = ref<Array<ArticleDto>>()
 
 const searchTag = ref<number>()
@@ -39,42 +38,6 @@ const fetchTagsData = () => {
     .catch(() => (tagsData.value = new Array<ArticleTag>()))
 }
 
-const inputValue = ref<string>("")
-const inputVisible = ref(false)
-const InputRef = ref<InstanceType<typeof ElInput>>()
-
-const handleClose = (tag: ArticleTag) => {
-  api.ArticleTagApi.deleteTags(tag.id).then(() => {
-    ElMessage.success("删除标签成功")
-    fetchTagsData()
-  })
-}
-
-const handleClickTag = (tag: ArticleTag) => {
-  searchTag.value = tag.id
-  fetchTableData()
-}
-
-const showInput = () => {
-  inputVisible.value = true
-  nextTick(() => {
-    InputRef.value!.input!.focus()
-  })
-}
-
-const handleInputConfirm = () => {
-  if (inputValue.value.length > 0) {
-    api.ArticleTagApi.addTags({ name: inputValue.value! }).then(() => {
-      ElMessage.success("添加标签成功")
-      fetchTagsData()
-      inputValue.value = ""
-      inputVisible.value = false
-    })
-  } else {
-    inputVisible.value = false
-  }
-}
-
 const handleRefresh = () => fetchTableData()
 
 const handleDelete = (article: ArticleDto) => {
@@ -97,28 +60,6 @@ watch([() => paginationData.page, () => paginationData.size], fetchTableData, { 
 
 <template>
   <div class="app-container">
-    <el-card>
-      <div class="tag-wrapper">
-        <el-tag
-          v-for="tag in tagsData"
-          :key="tag.id"
-          closable
-          :disable-transitions="false"
-          @click="handleClickTag(tag)"
-          @close="handleClose(tag)"
-        >
-          {{ tag.name }}
-        </el-tag>
-        <el-input
-          v-if="inputVisible"
-          ref="InputRef"
-          v-model="inputValue"
-          size="small"
-          @keyup.enter="handleInputConfirm"
-        />
-        <el-button v-else class="button-new-tag" size="small" :icon="Plus" @click="showInput" />
-      </div>
-    </el-card>
     <el-card v-loading="loading" shadow="never">
       <div class="toolbar-wrapper">
         <div>
@@ -175,10 +116,6 @@ watch([() => paginationData.page, () => paginationData.size], fetchTableData, { 
 .el-tag {
   margin-right: 10px;
   margin-bottom: 20px;
-}
-
-.el-input {
-  width: 15%;
 }
 
 .el-select {

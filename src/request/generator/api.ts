@@ -53,6 +53,31 @@ export interface ArticleCategory {
 /**
  * 
  * @export
+ * @interface ArticleCategoryCommand
+ */
+export interface ArticleCategoryCommand {
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleCategoryCommand
+     */
+    id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ArticleCategoryCommand
+     */
+    parent: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ArticleCategoryCommand
+     */
+    name: string;
+}
+/**
+ * 
+ * @export
  * @interface ArticleCategoryDto
  */
 export interface ArticleCategoryDto {
@@ -1357,14 +1382,14 @@ export const ArticleCategoriesApiAxiosParamCreator = function (configuration?: C
         /**
          * 增加文章分类
          * @summary 增加文章分类
-         * @param {ArticleTagCommand} articleTagCommand 
+         * @param {ArticleCategoryCommand} articleCategoryCommand 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addCategory: async (articleTagCommand: ArticleTagCommand, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'articleTagCommand' is not null or undefined
-            if (articleTagCommand === null || articleTagCommand === undefined) {
-                throw new RequiredError('articleTagCommand','Required parameter articleTagCommand was null or undefined when calling addCategory.');
+        addCategory: async (articleCategoryCommand: ArticleCategoryCommand, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'articleCategoryCommand' is not null or undefined
+            if (articleCategoryCommand === null || articleCategoryCommand === undefined) {
+                throw new RequiredError('articleCategoryCommand','Required parameter articleCategoryCommand was null or undefined when calling addCategory.');
             }
             const localVarPath = `/categories`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1394,13 +1419,13 @@ export const ArticleCategoriesApiAxiosParamCreator = function (configuration?: C
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof articleTagCommand !== 'string';
+            const nonString = typeof articleCategoryCommand !== 'string';
             const needsSerialization = nonString && configuration && configuration.isJsonMime
                 ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
                 : nonString;
             localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(articleTagCommand !== undefined ? articleTagCommand : {})
-                : (articleTagCommand || "");
+                ? JSON.stringify(articleCategoryCommand !== undefined ? articleCategoryCommand : {})
+                : (articleCategoryCommand || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -1501,12 +1526,12 @@ export const ArticleCategoriesApiFp = function(configuration?: Configuration) {
         /**
          * 增加文章分类
          * @summary 增加文章分类
-         * @param {ArticleTagCommand} articleTagCommand 
+         * @param {ArticleCategoryCommand} articleCategoryCommand 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addCategory(articleTagCommand: ArticleTagCommand, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await ArticleCategoriesApiAxiosParamCreator(configuration).addCategory(articleTagCommand, options);
+        async addCategory(articleCategoryCommand: ArticleCategoryCommand, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await ArticleCategoriesApiAxiosParamCreator(configuration).addCategory(articleCategoryCommand, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1551,12 +1576,12 @@ export const ArticleCategoriesApiFactory = function (configuration?: Configurati
         /**
          * 增加文章分类
          * @summary 增加文章分类
-         * @param {ArticleTagCommand} articleTagCommand 
+         * @param {ArticleCategoryCommand} articleCategoryCommand 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addCategory(articleTagCommand: ArticleTagCommand, options?: any): AxiosPromise<void> {
-            return ArticleCategoriesApiFp(configuration).addCategory(articleTagCommand, options).then((request) => request(axios, basePath));
+        addCategory(articleCategoryCommand: ArticleCategoryCommand, options?: any): AxiosPromise<void> {
+            return ArticleCategoriesApiFp(configuration).addCategory(articleCategoryCommand, options).then((request) => request(axios, basePath));
         },
         /**
          * 删除文章分类
@@ -1590,13 +1615,13 @@ export class ArticleCategoriesApi extends BaseAPI {
     /**
      * 增加文章分类
      * @summary 增加文章分类
-     * @param {ArticleTagCommand} articleTagCommand 
+     * @param {ArticleCategoryCommand} articleCategoryCommand 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ArticleCategoriesApi
      */
-    public addCategory(articleTagCommand: ArticleTagCommand, options?: any) {
-        return ArticleCategoriesApiFp(this.configuration).addCategory(articleTagCommand, options).then((request) => request(this.axios, this.basePath));
+    public addCategory(articleCategoryCommand: ArticleCategoryCommand, options?: any) {
+        return ArticleCategoriesApiFp(this.configuration).addCategory(articleCategoryCommand, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
