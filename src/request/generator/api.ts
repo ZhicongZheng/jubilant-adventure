@@ -1514,6 +1514,59 @@ export const ArticleCategoriesApiAxiosParamCreator = function (configuration?: C
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 更新文章分类
+         * @summary 更新分类
+         * @param {ArticleCategoryCommand} articleCategoryCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCategory: async (articleCategoryCommand: ArticleCategoryCommand, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'articleCategoryCommand' is not null or undefined
+            if (articleCategoryCommand === null || articleCategoryCommand === undefined) {
+                throw new RequiredError('articleCategoryCommand','Required parameter articleCategoryCommand was null or undefined when calling updateCategory.');
+            }
+            const localVarPath = `/categories`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication apiKeyAuth required
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof articleCategoryCommand !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(articleCategoryCommand !== undefined ? articleCategoryCommand : {})
+                : (articleCategoryCommand || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -1564,6 +1617,20 @@ export const ArticleCategoriesApiFp = function(configuration?: Configuration) {
                 return axios.request(axiosRequestArgs);
             };
         },
+        /**
+         * 更新文章分类
+         * @summary 更新分类
+         * @param {ArticleCategoryCommand} articleCategoryCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateCategory(articleCategoryCommand: ArticleCategoryCommand, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await ArticleCategoriesApiAxiosParamCreator(configuration).updateCategory(articleCategoryCommand, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
     }
 };
 
@@ -1601,6 +1668,16 @@ export const ArticleCategoriesApiFactory = function (configuration?: Configurati
          */
         listCategories(options?: any): AxiosPromise<Array<ArticleCategoryDto>> {
             return ArticleCategoriesApiFp(configuration).listCategories(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 更新文章分类
+         * @summary 更新分类
+         * @param {ArticleCategoryCommand} articleCategoryCommand 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCategory(articleCategoryCommand: ArticleCategoryCommand, options?: any): AxiosPromise<void> {
+            return ArticleCategoriesApiFp(configuration).updateCategory(articleCategoryCommand, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1645,6 +1722,18 @@ export class ArticleCategoriesApi extends BaseAPI {
      */
     public listCategories(options?: any) {
         return ArticleCategoriesApiFp(this.configuration).listCategories(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 更新文章分类
+     * @summary 更新分类
+     * @param {ArticleCategoryCommand} articleCategoryCommand 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleCategoriesApi
+     */
+    public updateCategory(articleCategoryCommand: ArticleCategoryCommand, options?: any) {
+        return ArticleCategoriesApiFp(this.configuration).updateCategory(articleCategoryCommand, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

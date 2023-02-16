@@ -47,9 +47,9 @@ const fetchCategoryData = () => {
     .then((res) => {
       const categoryDtos = res.data
       categoryDtos.map((dto) => {
-        dto.children = categoryDtos.filter((c) => c.parent == dto.id)
+        dto.children = categoryDtos.filter((c) => c.parent == dto.id).sort((c) => c.id)
       })
-      categoryData.value = categoryDtos.filter((dto) => dto.parent == -1)
+      categoryData.value = categoryDtos.filter((dto) => dto.parent == -1).sort((c) => c.id)
     })
     .catch(() => (categoryData.value = new Array<ArticleCategoryDto>()))
 }

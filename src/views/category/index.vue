@@ -1,17 +1,21 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref, watch } from "vue"
 import { api } from "@/utils/service"
-import { CirclePlus, Minus, Plus, RefreshRight } from "@element-plus/icons-vue"
+import { CirclePlus, Minus, Plus, RefreshRight, Edit } from "@element-plus/icons-vue"
 import type Node from "element-plus/es/components/tree/src/model/node"
 import { ArticleCategoryDto } from "@/request/generator"
 import { ElMessage, ElMessageBox, ElTree, FormInstance, FormRules } from "element-plus"
+import { DragEvents } from "element-plus/es/components/tree/src/model/useDragNode"
+import { NodeDropType } from "element-plus/es/components/tree/src/tree.type"
 
 const loading = ref<boolean>(false)
 const treeData = ref<Array<ArticleCategoryDto>>()
 const dialogRef = ref<boolean>(false)
+const updateDialogRef = ref<boolean>(false)
 const formRef = ref<FormInstance | null>(null)
 const treeRef = ref<InstanceType<typeof ElTree>>()
 const formData = reactive({
+  id: -1,
   name: "",
   parent: -1
 })
@@ -28,9 +32,9 @@ const fetchTreeData = () => {
     .then((res) => {
       const categoryDtos = res.data
       categoryDtos.map((dto) => {
-        dto.children = categoryDtos.filter((c) => c.parent == dto.id)
+        dto.children = categoryDtos.filter((c) => c.parent == dto.id).sort((c) => c.id)
       })
-      treeData.value = categoryDtos.filter((dto) => dto.parent == -1)
+      treeData.value = categoryDtos.filter((dto) => dto.parent == -1).sort((c) => c.id)
     })
     .catch(() => (treeData.value = new Array<ArticleCategoryDto>()))
     .finally(() => (loading.value = false))
@@ -63,6 +67,31 @@ const handleCreate = () => {
   })
 }
 
+const update = (category: ArticleCategoryDto) => {
+  formData.id = category.id
+  formData.name = category.name
+  formData.parent = category.parent
+  updateDialogRef.value = true
+}
+
+const handleUpdate = () => {
+  formRef.value?.validate((valid: boolean) => {
+    if (valid) {
+      api.ArticleCategoryApi.updateCategory({
+        id: formData.id,
+        name: formData.name,
+        parent: formData.parent
+      }).then(() => {
+        ElMessage.success("修改成功")
+        updateDialogRef.value = false
+        resetAddForm()
+      })
+    } else {
+      return false
+    }
+  })
+}
+
 const remove = (node: Node, data: ArticleCategoryDto) => {
   ElMessageBox.confirm(`确定删除分类：${data.name}?`, "提示", {
     confirmButtonText: "确定",
@@ -72,6 +101,28 @@ const remove = (node: Node, data: ArticleCategoryDto) => {
     api.ArticleCategoryApi.deleteCategory(data.id)
       .then(() => ElMessage.success("删除成功"))
       .finally(() => fetchTreeData())
+  })
+}
+
+const handleDrag = (draggingNode: Node, dropNode: Node, dropType: NodeDropType, ev: DragEvents) => {
+  console.log("拖拽节点：" + draggingNode.data.name + " 到 " + dropNode.data.name + " 的 " + dropType)
+
+  const parent = (dropNode: Node, dropType: string) => {
+    if (dropType == "before" || dropType == "after") {
+      if (dropNode.data.id == -1) {
+        return -1
+      } else {
+        return dropNode.data.parent
+      }
+    } else {
+      return dropNode.data.id
+    }
+  }
+
+  api.ArticleCategoryApi.updateCategory({
+    id: draggingNode.data.id,
+    name: draggingNode.data.name,
+    parent: parent(dropNode, dropType)
   })
 }
 
@@ -113,6 +164,7 @@ onMounted(() => fetchTreeData())
           default-expand-all
           :expand-on-click-node="false"
           :filter-node-method="filterNode"
+          @node-drop="handleDrag"
         >
           <template #default="{ node, data }">
             <span class="custom-tree-node">
@@ -120,6 +172,7 @@ onMounted(() => fetchTreeData())
               <span>
                 <el-icon style="margin-left: 10px" color="#409EFF" @click="append(data)"><Plus /></el-icon>
                 <el-icon style="margin-left: 10px" color="#F56C6C" @click="remove(node, data)"><Minus /></el-icon>
+                <el-icon style="margin-left: 10px" @click="update(data)"><Edit /></el-icon>
               </span>
             </span>
           </template>
@@ -136,6 +189,18 @@ onMounted(() => fetchTreeData())
       <template #footer>
         <el-button @click="dialogRef = false">取消</el-button>
         <el-button type="primary" @click="handleCreate">确认</el-button>
+      </template>
+    </el-dialog>
+    <!--修改分类-->
+    <el-dialog v-model="updateDialogRef" :title="'修改分类'" @close="resetAddForm" width="30%">
+      <el-form ref="formRef" :model="formData" :rules="createFormRules" label-width="auto">
+        <el-form-item prop="name" label="标签分类">
+          <el-input v-model="formData.name" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="updateDialogRef = false">取消</el-button>
+        <el-button type="primary" @click="handleUpdate">确认</el-button>
       </template>
     </el-dialog>
   </div>

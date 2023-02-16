@@ -27,7 +27,7 @@ const fetchTableData = () => {
 }
 
 const handleDelete = (tag: ArticleTagDto) => {
-  ElMessageBox.confirm(`确定删除文章: ${tag.name}?`, "提示", {
+  ElMessageBox.confirm(`确定删除标签: ${tag.name}?`, "提示", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning"
