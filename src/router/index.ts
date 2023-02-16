@@ -85,13 +85,13 @@ export const asyncRoutes: RouteRecordRaw[] = [
   {
     path: "/users",
     component: Layout,
-    redirect: "/users",
+    redirect: "/users/",
     meta: {
       alwaysShow: false
     },
     children: [
       {
-        path: "/users",
+        path: "",
         component: () => import("@/views/user/index.vue"),
         name: "User List",
         meta: {
@@ -105,13 +105,13 @@ export const asyncRoutes: RouteRecordRaw[] = [
   {
     path: "/roles",
     component: Layout,
-    redirect: "/roles",
+    redirect: "/roles/",
     meta: {
       alwaysShow: false
     },
     children: [
       {
-        path: "/roles",
+        path: "",
         component: () => import("@/views/role/index.vue"),
         name: "Role List",
         meta: {
