@@ -19,10 +19,12 @@ specifiers:
   eslint: ^8.26.0
   eslint-plugin-prettier: ^4.2.1
   eslint-plugin-vue: ^9.6.0
+  highlight.js: 11.7.0
   husky: ^8.0.1
   js-cookie: ^3.0.1
   lint-staged: ^13.0.3
   lodash-es: ^4.17.21
+  mavon-editor: 3.0.0-beta
   normalize.css: ^8.0.1
   nprogress: ^0.2.0
   path-browserify: ^1.0.1
@@ -40,8 +42,6 @@ specifiers:
   vue-eslint-parser: ^9.1.0
   vue-router: ^4.1.6
   vue-tsc: ^1.0.9
-  vxe-table: ^4.3.5
-  vxe-table-plugin-element: ^3.0.6
   xe-utils: ^3.5.7
 
 dependencies:
@@ -49,8 +49,10 @@ dependencies:
   axios: 1.1.3
   dayjs: 1.11.6
   element-plus: 2.2.19_vue@3.2.41
+  highlight.js: 11.7.0
   js-cookie: 3.0.1
   lodash-es: 4.17.21
+  mavon-editor: 3.0.0-beta
   normalize.css: 8.0.1
   nprogress: 0.2.0
   path-browserify: 1.0.1
@@ -59,8 +61,6 @@ dependencies:
   screenfull: 6.0.2
   vue: 3.2.41
   vue-router: 4.1.6_vue@3.2.41
-  vxe-table: 4.3.5_vue@3.2.41+xe-utils@3.5.7
-  vxe-table-plugin-element: 3.0.6_vxe-table@4.3.5
   xe-utils: 3.5.7
 
 devDependencies:
@@ -1328,7 +1328,6 @@ packages:
 
   /commander/2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
-    dev: true
 
   /commander/7.2.0:
     resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
@@ -1402,6 +1401,10 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
     dev: true
+
+  /cssfilter/0.0.10:
+    resolution: {integrity: sha512-FAaLDaplstoRsDR8XGYH51znUN0UY7nMc6Z9/fvE8EXGwvJE9hu7W2vHwx1+bd6gCYnln9nLbzxFTrcO9YQDZw==}
+    dev: false
 
   /csso/4.2.0:
     resolution: {integrity: sha512-wvlcdIbf6pwKEk7vHj8/Bkc0B4ylXZruLvOgs9doS5eOsOpuodOV2zJChSpkp+pRpYQLQMeF04nr3Z68Sta9jA==}
@@ -2349,6 +2352,21 @@ packages:
     hasBin: true
     dev: true
 
+  /highlight.js-async-webpack/1.0.4:
+    resolution: {integrity: sha512-IC0AwUgNr7BU8pqheaCEvOQvOtIZwO3I4rtbmT489Ndz8loE31IRmBmT6C4qDCbfZjzNO+k2w3VceZjTQ3JQ8Q==}
+    dev: false
+
+  /highlight.js/11.7.0:
+    resolution: {integrity: sha512-1rRqesRFhMO/PRF+G86evnyJkCgaZFOI+Z6kdj15TA18funfoqJXvgPCLSf0SWq3SRfg1j3HlDs8o4s3EGq1oQ==}
+    engines: {node: '>=12.0.0'}
+    dev: false
+
+  /highlight.js/9.18.5:
+    resolution: {integrity: sha512-a5bFyofd/BHCX52/8i8uJkjr9DYwXIPnM/plwI6W7ezItLGqzt7X2G2nXuYSfsIJdkwwj/g9DG1LkcGJI/dDoA==}
+    deprecated: Support has ended for 9.x series. Upgrade to @latest
+    requiresBuild: true
+    dev: false
+
   /html-tags/3.2.0:
     resolution: {integrity: sha512-vy7ClnArOZwCnqZgvv+ddgHgJiAFXe3Ge9ML5/mBctVJoUoYPCdxVucOywjDARn6CVoh3dRSFdPHy2sX80L0Wg==}
     engines: {node: '>=8'}
@@ -2786,6 +2804,14 @@ packages:
     dependencies:
       object-visit: 1.0.1
     dev: true
+
+  /mavon-editor/3.0.0-beta:
+    resolution: {integrity: sha512-cmGKbkgrlvFtrhEVyEUIO2X30R+0p0cWpWcYZ97p2E7zn5flKakgv3gq/4mrzjb6UTmhUiHis38k+a6fP6XUEQ==}
+    dependencies:
+      highlight.js: 9.18.5
+      highlight.js-async-webpack: 1.0.4
+      xss: 1.0.14
+    dev: false
 
   /mdn-data/2.0.14:
     resolution: {integrity: sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==}
@@ -3952,24 +3978,6 @@ packages:
       '@vue/server-renderer': 3.2.41_vue@3.2.41
       '@vue/shared': 3.2.41
 
-  /vxe-table-plugin-element/3.0.6_vxe-table@4.3.5:
-    resolution: {integrity: sha512-V0SQ2TGXmooDbHTiRSJHSHnFFBatp7fFP4vEDNPHQlGDgypo2stOJ8KXKENQznZxpNWKkmxSBNFZaMFEr+ycEQ==}
-    peerDependencies:
-      vxe-table: ^4.2.0
-    dependencies:
-      vxe-table: 4.3.5_vue@3.2.41+xe-utils@3.5.7
-    dev: false
-
-  /vxe-table/4.3.5_vue@3.2.41+xe-utils@3.5.7:
-    resolution: {integrity: sha512-JEvGAs7SBN1rWn5f2tkoRiXd/rAT7RfnDTTlFsHsTtASiUTKNTISI2WBsVeLkkNRTs0SXh6FgrYsIPO2soSBXA==}
-    peerDependencies:
-      vue: ^3.2.28
-      xe-utils: ^3.5.0
-    dependencies:
-      vue: 3.2.41
-      xe-utils: 3.5.7
-    dev: false
-
   /which/2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
     engines: {node: '>= 8'}
@@ -4013,6 +4021,15 @@ packages:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
     engines: {node: '>=12'}
     dev: true
+
+  /xss/1.0.14:
+    resolution: {integrity: sha512-og7TEJhXvn1a7kzZGQ7ETjdQVS2UfZyTlsEdDOqvQF7GoxNfY+0YLCzBy1kPdsDDx4QuNAonQPddpsn6Xl/7sw==}
+    engines: {node: '>= 0.10.0'}
+    hasBin: true
+    dependencies:
+      commander: 2.20.3
+      cssfilter: 0.0.10
+    dev: false
 
   /yallist/4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}

@@ -123,9 +123,8 @@ export const asyncRoutes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: "/articles",
+    path: "/articles-manage",
     component: Layout,
-    redirect: "/articles",
     meta: {
       title: "文章相关",
       svgIcon: "lock",
@@ -133,7 +132,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: "/articles",
+        path: "articles",
         component: () => import("@/views/article/index.vue"),
         name: "Article List",
         meta: {
@@ -143,7 +142,28 @@ export const asyncRoutes: RouteRecordRaw[] = [
         }
       },
       {
-        path: "/tags",
+        path: "articles/edit/:id",
+        component: () => import("@/views/article/edit/index.vue"),
+        name: "Article Edit by id",
+        meta: {
+          title: "修改文章",
+          svgIcon: "lock",
+          roles: ["SUPER_ADMIN"],
+          hidden: true
+        }
+      },
+      {
+        path: "articles/edit",
+        component: () => import("@/views/article/edit/index.vue"),
+        name: "Article Edit",
+        meta: {
+          title: "发布文章",
+          svgIcon: "lock",
+          roles: ["SUPER_ADMIN"]
+        }
+      },
+      {
+        path: "tags",
         component: () => import("@/views/tag/index.vue"),
         name: "Article Tag List",
         meta: {
@@ -153,7 +173,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
         }
       },
       {
-        path: "/categories",
+        path: "categories",
         component: () => import("@/views/category/index.vue"),
         name: "Article Category List",
         meta: {

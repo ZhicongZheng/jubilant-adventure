@@ -5,6 +5,9 @@ import { api } from "@/utils/service"
 import { usePagination } from "@/hooks/usePagination"
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus"
 import { ArticleCategoryDto, ArticleDto, ArticleTagDto } from "@/request/generator"
+import { useRouter } from "vue-router"
+
+const router = useRouter()
 
 const loading = ref<boolean>(false)
 const { paginationData, handleCurrentChange, handleSizeChange } = usePagination()
@@ -76,6 +79,8 @@ const handleRelease = (article: ArticleDto) => {
   })
 }
 
+const editArticle = (article: ArticleDto) => router.push({ path: `/articles-manage/articles/edit/${article.id}` })
+
 const resetSearch = () => {
   searchFormRef.value?.resetFields()
   if (paginationData.page === 1) {
@@ -141,6 +146,7 @@ watch([() => paginationData.page, () => paginationData.size], fetchTableData, { 
           </el-table-column>
           <el-table-column label="操作" width="250" align="center">
             <template #default="scope">
+              <el-button type="primary" text bg size="small" @click="editArticle(scope.row)">编辑</el-button>
               <el-button type="primary" text bg size="small" @click="handleRelease(scope.row)">发布</el-button>
               <el-button type="danger" text bg size="small" @click="handleDelete(scope.row)">删除</el-button>
             </template>

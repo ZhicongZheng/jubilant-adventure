@@ -992,6 +992,49 @@ export const ArticleApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * 根据id获取文章详情
+         * @summary 获取文章详情
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getArticle: async (id: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling getArticle.');
+            }
+            const localVarPath = `/articles/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 分页获取文章列表
          * @summary 分页获取文章
          * @param {number} [page] 
@@ -1189,6 +1232,20 @@ export const ArticleApiFp = function(configuration?: Configuration) {
             };
         },
         /**
+         * 根据id获取文章详情
+         * @summary 获取文章详情
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getArticle(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArticleDto>> {
+            const localVarAxiosArgs = await ArticleApiAxiosParamCreator(configuration).getArticle(id, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
          * 分页获取文章列表
          * @summary 分页获取文章
          * @param {number} [page] 
@@ -1264,6 +1321,16 @@ export const ArticleApiFactory = function (configuration?: Configuration, basePa
             return ArticleApiFp(configuration).deleteArticle(id, options).then((request) => request(axios, basePath));
         },
         /**
+         * 根据id获取文章详情
+         * @summary 获取文章详情
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getArticle(id: number, options?: any): AxiosPromise<ArticleDto> {
+            return ArticleApiFp(configuration).getArticle(id, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 分页获取文章列表
          * @summary 分页获取文章
          * @param {number} [page] 
@@ -1329,6 +1396,18 @@ export class ArticleApi extends BaseAPI {
      */
     public deleteArticle(id: number, options?: any) {
         return ArticleApiFp(this.configuration).deleteArticle(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 根据id获取文章详情
+     * @summary 获取文章详情
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ArticleApi
+     */
+    public getArticle(id: number, options?: any) {
+        return ArticleApiFp(this.configuration).getArticle(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
