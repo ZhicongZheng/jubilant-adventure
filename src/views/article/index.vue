@@ -136,7 +136,11 @@ watch([() => paginationData.page, () => paginationData.size], fetchTableData, { 
           <el-table-column prop="id" label="id" align="center" />
           <el-table-column prop="title" label="文章标题" align="center" />
           <el-table-column prop="introduction" label="文章介绍" align="center" />
-          <el-table-column prop="frontCover" label="文章封面" align="center" />
+          <el-table-column prop="frontCover" label="文章封面" align="center">
+            <template #default="{ row }">
+              <el-image class="article-cover" :src="row.frontCover" />
+            </template>
+          </el-table-column>
           <el-table-column prop="status" label="文章状态" align="center">
             <template #default="{ row }">
               <el-tag v-if="row.status === 1">已发布</el-tag>
@@ -144,6 +148,8 @@ watch([() => paginationData.page, () => paginationData.size], fetchTableData, { 
               <el-tag v-else-if="row.status === -1">已删除</el-tag>
             </template>
           </el-table-column>
+          <el-table-column prop="viewCount" label="浏览量" align="center" />
+          <el-table-column prop="likeCount" label="点赞量" align="center" />
           <el-table-column label="操作" width="250" align="center">
             <template #default="scope">
               <el-button type="primary" text bg size="small" @click="editArticle(scope.row)">编辑</el-button>
@@ -195,5 +201,21 @@ watch([() => paginationData.page, () => paginationData.size], fetchTableData, { 
   :deep(.el-card__body) {
     padding-bottom: 2px;
   }
+}
+
+.article-cover {
+  position: relative;
+  width: 50%;
+  height: 90px;
+  border-radius: 4px;
+}
+.article-cover::after {
+  content: "";
+  background: rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 </style>
