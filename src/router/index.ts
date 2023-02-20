@@ -58,10 +58,21 @@ export const constantRoutes: RouteRecordRaw[] = [
   },
   {
     path: "/userInfo",
-    component: () => import("@/views/user/about/index.vue"),
+    component: Layout,
+    redirect: "/current",
     meta: {
       hidden: true
-    }
+    },
+    children: [
+      {
+        path: "/current",
+        component: () => import("@/views/user/about/index.vue"),
+        name: "个人中心",
+        meta: {
+          title: "个人中心"
+        }
+      }
+    ]
   }
 ]
 
@@ -72,15 +83,15 @@ export const constantRoutes: RouteRecordRaw[] = [
  */
 export const asyncRoutes: RouteRecordRaw[] = [
   {
-    path: "/user-manager",
+    path: "/users",
     component: Layout,
-    redirect: "/users",
+    redirect: "/users/",
     meta: {
       alwaysShow: false
     },
     children: [
       {
-        path: "/users",
+        path: "",
         component: () => import("@/views/user/index.vue"),
         name: "User List",
         meta: {
@@ -92,19 +103,81 @@ export const asyncRoutes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: "/role-manager",
+    path: "/roles",
     component: Layout,
-    redirect: "/roles",
+    redirect: "/roles/",
     meta: {
       alwaysShow: false
     },
     children: [
       {
-        path: "/roles",
+        path: "",
         component: () => import("@/views/role/index.vue"),
         name: "Role List",
         meta: {
           title: "角色管理",
+          svgIcon: "lock",
+          roles: ["SUPER_ADMIN"]
+        }
+      }
+    ]
+  },
+  {
+    path: "/articles-manage",
+    component: Layout,
+    meta: {
+      title: "文章相关",
+      svgIcon: "lock",
+      alwaysShow: false
+    },
+    children: [
+      {
+        path: "articles",
+        component: () => import("@/views/article/index.vue"),
+        name: "Article List",
+        meta: {
+          title: "文章管理",
+          svgIcon: "lock",
+          roles: ["SUPER_ADMIN"]
+        }
+      },
+      {
+        path: "articles/edit/:id",
+        component: () => import("@/views/article/edit/index.vue"),
+        name: "Article Edit by id",
+        meta: {
+          title: "修改文章",
+          svgIcon: "lock",
+          roles: ["SUPER_ADMIN"],
+          hidden: true
+        }
+      },
+      {
+        path: "articles/edit",
+        component: () => import("@/views/article/edit/index.vue"),
+        name: "Article Edit",
+        meta: {
+          title: "发布文章",
+          svgIcon: "lock",
+          roles: ["SUPER_ADMIN"]
+        }
+      },
+      {
+        path: "tags",
+        component: () => import("@/views/tag/index.vue"),
+        name: "Article Tag List",
+        meta: {
+          title: "标签管理",
+          svgIcon: "lock",
+          roles: ["SUPER_ADMIN"]
+        }
+      },
+      {
+        path: "categories",
+        component: () => import("@/views/category/index.vue"),
+        name: "Article Category List",
+        meta: {
+          title: "分类管理",
           svgIcon: "lock",
           roles: ["SUPER_ADMIN"]
         }

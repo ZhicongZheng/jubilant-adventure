@@ -1,34 +1,23 @@
 <script lang="ts" setup>
-import { type ThemeName, useTheme } from "@/hooks/useTheme"
-import { MagicStick } from "@element-plus/icons-vue"
+import { useTheme } from "@/hooks/useTheme"
+import { ref } from "vue"
 
-const { themeList, activeThemeName, setTheme } = useTheme()
+const { setTheme } = useTheme()
 
-const handleSetTheme = (name: ThemeName) => {
-  setTheme(name)
+const theme = ref(Boolean)
+
+const handleSetTheme2 = (block: Boolean) => {
+  if (block) {
+    setTheme("dark")
+  } else {
+    setTheme("normal")
+  }
 }
 </script>
 
 <template>
-  <el-dropdown trigger="click" @command="handleSetTheme">
-    <div>
-      <el-tooltip effect="dark" content="主题模式" placement="bottom">
-        <el-icon :size="20">
-          <MagicStick />
-        </el-icon>
-      </el-tooltip>
-    </div>
-    <template #dropdown>
-      <el-dropdown-menu>
-        <el-dropdown-item
-          v-for="(theme, index) in themeList"
-          :key="index"
-          :disabled="activeThemeName === theme.name"
-          :command="theme.name"
-        >
-          <span>{{ theme.title }}</span>
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </template>
-  </el-dropdown>
+  <div>
+    <span> 暗黑模式 </span>
+    <el-switch v-model="theme" @change="handleSetTheme2" />
+  </div>
 </template>

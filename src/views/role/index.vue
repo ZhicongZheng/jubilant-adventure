@@ -101,6 +101,7 @@ const closeUpdateDialog = () => {
   updateRoleCommandRef.value = undefined
   selectedPermissions.value = new Array<number>()
   updateDialog.value = false
+  fetchTableData()
 }
 const handleUpdate = () => {
   api.RoleApi.updateRole({
