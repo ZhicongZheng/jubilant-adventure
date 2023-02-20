@@ -10,6 +10,7 @@ import "mavon-editor/dist/css/index.css"
 
 const route = useRoute()
 
+const mavonEditorRef = ref()
 const articleIdRef = ref<number>()
 const tagsData = ref<Array<ArticleTagDto>>()
 const categoryData = ref<Array<ArticleCategoryDto>>()
@@ -35,7 +36,6 @@ const init = () => {
       article.title = articleDto.title
       article.introduction = articleDto.introduction
       article.contentMd = articleDto.contentMd
-      article.contentHtml = articleDto.contentHtml
       article.status = articleDto.status
       if (articleDto.frontCover) {
         article.frontCover = articleDto.frontCover
@@ -96,35 +96,33 @@ const saveArticle = (release: boolean) => {
     ElMessage.error("标题和简介不可为空")
     return
   }
+  const articleCommand = {
+    id: articleIdRef.value,
+    title: article.title,
+    introduction: article.introduction,
+    frontCover: article.frontCover,
+    tags: article.tags,
+    category: article.category.at(article.category.length - 1),
+    contentMd: article.contentMd,
+    contentHtml: mavonEditorRef.value.d_render
+  }
   if (articleIdRef.value) {
     console.log("更新文章")
-    api.ArticleApi.updateArticle({
-      id: articleIdRef.value,
-      title: article.title,
-      introduction: article.introduction,
-      frontCover: article.frontCover,
-      tags: article.tags,
-      category: article.category.at(article.category.length - 1),
-      contentMd: article.contentMd,
-      contentHtml: article.contentHtml
-    }).then(() => ElMessage.success("保存成功"))
+    api.ArticleApi.updateArticle(articleCommand).then(() => {
+      if (release) {
+        api.ArticleApi.releaseArticle(articleIdRef.value!)
+      }
+      ElMessage.success("操作成功")
+    })
   } else {
     console.log("创建文章")
-    api.ArticleApi.createArticle({
-      title: article.title,
-      introduction: article.introduction,
-      frontCover: article.frontCover,
-      tags: article.tags,
-      category: article.category.at(article.category.length - 1),
-      contentMd: article.contentMd,
-      contentHtml: article.contentHtml
-    }).then((res) => {
+    api.ArticleApi.createArticle(articleCommand).then((res) => {
       articleIdRef.value = res.data
-      ElMessage.success("保存成功")
+      if (release) {
+        api.ArticleApi.releaseArticle(articleIdRef.value!)
+      }
+      ElMessage.success("操作成功")
     })
-  }
-  if (release) {
-    api.ArticleApi.releaseArticle(articleIdRef.value!)
   }
 }
 
@@ -132,20 +130,6 @@ const uploadCover = (res: string) => {
   console.log("上传图片成功")
   article.frontCover = res
 }
-
-const beforeUpload = (file: UploadFile) => {
-  return new Promise((resolve) => {
-    if (file.size! / 1024 < CacheKey.UPLOAD_SIZE) {
-      resolve(file)
-    }
-    // 压缩到200KB,这里的200就是要压缩的大小,可自定义
-    compress(file.raw!, CacheKey.UPLOAD_SIZE).then((res: unknown) => {
-      resolve(res)
-    })
-  })
-}
-
-const mavonEditorRef = ref()
 
 const uploadImage = (pos: string, file: UploadFile) => {
   console.log("开始上传文件")
@@ -211,7 +195,6 @@ watch(
           action="/api/v1/files/upload"
           limit="1"
           :on-success="uploadCover"
-          :before-upload="beforeUpload"
         >
           <i class="el-icon-upload" v-if="article.frontCover === ''" />
           <div class="el-upload__text" v-if="article.frontCover === ''">文章封面，图片拖到此处或<em>点击上传</em></div>

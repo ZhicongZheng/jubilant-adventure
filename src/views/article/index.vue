@@ -83,6 +83,9 @@ const editArticle = (article: ArticleDto) => router.push({ path: `/articles-mana
 
 const resetSearch = () => {
   searchFormRef.value?.resetFields()
+  selectTag.value = undefined
+  selectCategory.value = new Array<number>()
+  searchTitle.value = undefined
   if (paginationData.page === 1) {
     fetchTableData()
   }
@@ -138,7 +141,8 @@ watch([() => paginationData.page, () => paginationData.size], fetchTableData, { 
           <el-table-column prop="introduction" label="文章介绍" align="center" />
           <el-table-column prop="frontCover" label="文章封面" align="center">
             <template #default="{ row }">
-              <el-image class="article-cover" :src="row.frontCover" />
+              <el-image class="article-cover" v-if="row.frontCover" :src="row.frontCover" />
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column prop="status" label="文章状态" align="center">

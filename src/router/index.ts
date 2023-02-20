@@ -136,7 +136,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/article/index.vue"),
         name: "Article List",
         meta: {
-          title: "文章管理",
+          title: "文章列表",
           svgIcon: "lock",
           roles: ["SUPER_ADMIN"]
         }
