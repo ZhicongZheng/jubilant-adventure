@@ -6,7 +6,6 @@ import { ElMessage, UploadFile } from "element-plus"
 import { ArticleCategoryDto, ArticleTagDto } from "@/request/generator"
 import { compress } from "image-conversion"
 import CacheKey from "@/constants/cacheKey"
-import { mavonEditor } from "mavon-editor"
 import "mavon-editor/dist/css/index.css"
 
 const route = useRoute()
