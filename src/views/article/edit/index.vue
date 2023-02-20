@@ -2,8 +2,11 @@
 import { onMounted, reactive, ref, watch } from "vue"
 import { api } from "@/utils/service"
 import { useRoute } from "vue-router"
-import { ElMessage } from "element-plus"
+import { ElMessage, UploadFile } from "element-plus"
 import { ArticleCategoryDto, ArticleTagDto } from "@/request/generator"
+import { compress } from "image-conversion"
+import CacheKey from "@/constants/cacheKey"
+import "mavon-editor/dist/css/index.css"
 
 const route = useRoute()
 
@@ -126,7 +129,30 @@ const saveArticle = (release: boolean) => {
 }
 
 const uploadCover = (res: string) => {
+  console.log("上传图片成功")
   article.frontCover = res
+}
+
+const beforeUpload = (file: UploadFile) => {
+  return new Promise((resolve) => {
+    if (file.size! / 1024 < CacheKey.UPLOAD_SIZE) {
+      resolve(file)
+    }
+    // 压缩到200KB,这里的200就是要压缩的大小,可自定义
+    compress(file.raw!, CacheKey.UPLOAD_SIZE).then((res: unknown) => {
+      resolve(res)
+    })
+  })
+}
+
+const mavonEditorRef = ref()
+
+const uploadImage = (pos: string, file: UploadFile) => {
+  console.log("开始上传文件")
+  api.FileApi.fileUpload(file).then((res) => {
+    ElMessage.success("上传图片成功")
+    mavonEditorRef.value.$img2Url(pos, res.data)
+  })
 }
 
 const props1 = {
@@ -185,13 +211,19 @@ watch(
           action="/api/v1/files/upload"
           limit="1"
           :on-success="uploadCover"
+          :before-upload="beforeUpload"
         >
           <i class="el-icon-upload" v-if="article.frontCover === ''" />
           <div class="el-upload__text" v-if="article.frontCover === ''">文章封面，图片拖到此处或<em>点击上传</em></div>
           <img v-else :src="article.frontCover" class="el-upload-image" alt="文章封面" />
         </el-upload>
       </div>
-      <mavon-editor ref="md" v-model="article.contentMd" style="height: calc(100vh - 260px)" />
+      <mavon-editor
+        ref="mavonEditorRef"
+        v-model="article.contentMd"
+        @imgAdd="uploadImage"
+        style="height: calc(100vh - 260px)"
+      />
     </el-card>
   </div>
 </template>

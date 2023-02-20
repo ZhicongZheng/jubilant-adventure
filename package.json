@@ -28,6 +28,7 @@
     "dayjs": "^1.11.6",
     "element-plus": "^2.2.19",
     "highlight.js": "11.7.0",
+    "image-conversion": "^2.1.1",
     "js-cookie": "^3.0.1",
     "lodash-es": "^4.17.21",
     "mavon-editor": "3.0.0-beta",
