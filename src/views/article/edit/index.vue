@@ -100,7 +100,7 @@ const saveArticle = (release: boolean) => {
     introduction: article.introduction,
     frontCover: article.frontCover,
     tags: article.tags,
-    category: article.category.at(article.category.length - 1),
+    category: article.category ? article.category.at(article.category.length - 1) : undefined,
     contentMd: article.contentMd,
     contentHtml: mavonEditorRef.value.d_render
   }
